@@ -9,5 +9,4 @@ const withNextra = nextra({
 
 export default withNextra({
   reactStrictMode: true,
-  serverExternalPackages: ['better-sqlite3'],
 })

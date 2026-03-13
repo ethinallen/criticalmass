@@ -1,13 +1,15 @@
-import Database from 'better-sqlite3'
-import { drizzle } from 'drizzle-orm/better-sqlite3'
+import { neon } from '@neondatabase/serverless'
+import { drizzle } from 'drizzle-orm/neon-http'
 import { rides } from './schema'
 import { sql } from 'drizzle-orm'
 
-const sqlite = new Database(process.env.DATABASE_URL ?? 'sqlite.db')
-sqlite.pragma('journal_mode = WAL')
-sqlite.pragma('foreign_keys = ON')
+const databaseUrl = process.env.POSTGRES_URL ?? process.env.DATABASE_URL
+if (!databaseUrl) {
+  throw new Error('POSTGRES_URL or DATABASE_URL environment variable is required')
+}
 
-const db = drizzle(sqlite)
+const client = neon(databaseUrl)
+const db = drizzle(client)
 
 const seedRides = [
   {
@@ -183,16 +185,13 @@ async function seed() {
   console.log('Seeding rides...')
 
   for (const ride of seedRides) {
-    db.insert(rides)
+    await db.insert(rides)
       .values(ride)
       .onConflictDoNothing({ target: rides.slug })
-      .run()
   }
 
-  const count = db.select({ count: sql<number>`count(*)` }).from(rides).get()
-  console.log(`Done. ${count?.count ?? 0} rides in database.`)
-
-  sqlite.close()
+  const result = await db.select({ count: sql<number>`count(*)` }).from(rides)
+  console.log(`Done. ${result[0]?.count ?? 0} rides in database.`)
 }
 
-seed()
+seed().catch(console.error)
