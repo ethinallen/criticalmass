@@ -10,7 +10,7 @@ export default function HomePage() {
     <div className="mx-auto max-w-4xl px-6 py-16">
       <section className="mb-20 text-center">
         <h1 className="mb-6 text-5xl font-extrabold tracking-tight">
-          We are traffic.
+          Critical Mass is a bike ride.
         </h1>
         <p className="mx-auto mb-10 max-w-2xl text-xl text-gray-600 dark:text-gray-400">
           Critical Mass is a global movement of cyclists riding together to

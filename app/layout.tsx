@@ -7,6 +7,11 @@ import type { Metadata } from 'next'
 import { SessionProvider } from '@/components/session-provider'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : 'https://criticalmass.bike',
+  ),
   title: {
     template: '%s — Critical Mass',
     default: 'Critical Mass — Start, Find, and Sustain Rides Worldwide',
@@ -24,7 +29,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" dir="ltr" suppressHydrationWarning>
-      <Head faviconGlyph="🚲" />
+      <Head />
       <body>
         <SessionProvider>
         <Layout
