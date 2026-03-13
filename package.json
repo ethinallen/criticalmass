@@ -7,21 +7,35 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:seed": "npx tsx src/db/seed.ts"
   },
   "license": "GPL-3.0",
   "dependencies": {
+    "@auth/drizzle-adapter": "^1.11.1",
+    "better-sqlite3": "^12.6.2",
+    "drizzle-orm": "^0.45.1",
     "next": "^15.2.0",
+    "next-auth": "5.0.0-beta.30",
     "nextra": "latest",
     "nextra-theme-docs": "latest",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
+  "pnpm": {
+    "onlyBuiltDependencies": ["better-sqlite3", "esbuild"]
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "drizzle-kit": "^0.31.9",
     "postcss": "^8.5.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0"
