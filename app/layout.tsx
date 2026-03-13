@@ -4,6 +4,7 @@ import { getPageMap } from 'nextra/page-map'
 import 'nextra-theme-docs/style.css'
 import './globals.css'
 import type { Metadata } from 'next'
+import { SessionProvider } from '@/components/session-provider'
 
 export const metadata: Metadata = {
   title: {
@@ -25,6 +26,7 @@ export default async function RootLayout({
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <Head faviconGlyph="🚲" />
       <body>
+        <SessionProvider>
         <Layout
           navbar={
             <Navbar
@@ -44,6 +46,7 @@ export default async function RootLayout({
         >
           {children}
         </Layout>
+        </SessionProvider>
       </body>
     </html>
   )
