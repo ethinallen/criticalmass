@@ -2,10 +2,10 @@ import { neon, type NeonQueryFunction } from '@neondatabase/serverless'
 import { drizzle } from 'drizzle-orm/neon-http'
 import * as schema from './schema'
 
-const databaseUrl = process.env.DATABASE_URL
+const databaseUrl = process.env.POSTGRES_URL ?? process.env.DATABASE_URL
 
 if (!databaseUrl && process.env.NODE_ENV === 'production') {
-  throw new Error('DATABASE_URL environment variable is required in production')
+  throw new Error('POSTGRES_URL or DATABASE_URL environment variable is required in production')
 }
 
 const sql: NeonQueryFunction<boolean, boolean> = databaseUrl

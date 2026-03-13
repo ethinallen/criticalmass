@@ -3,11 +3,12 @@ import { drizzle } from 'drizzle-orm/neon-http'
 import { rides } from './schema'
 import { sql } from 'drizzle-orm'
 
-if (!process.env.DATABASE_URL) {
-  throw new Error('DATABASE_URL environment variable is required')
+const databaseUrl = process.env.POSTGRES_URL ?? process.env.DATABASE_URL
+if (!databaseUrl) {
+  throw new Error('POSTGRES_URL or DATABASE_URL environment variable is required')
 }
 
-const client = neon(process.env.DATABASE_URL)
+const client = neon(databaseUrl)
 const db = drizzle(client)
 
 const seedRides = [
