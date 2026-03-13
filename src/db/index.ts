@@ -4,6 +4,10 @@ import * as schema from './schema'
 
 const databaseUrl = process.env.POSTGRES_URL ?? process.env.DATABASE_URL
 
+console.log('[db] POSTGRES_URL set:', !!process.env.POSTGRES_URL)
+console.log('[db] DATABASE_URL set:', !!process.env.DATABASE_URL)
+console.log('[db] Using URL prefix:', databaseUrl?.substring(0, 30) + '...')
+
 if (!databaseUrl && process.env.NODE_ENV === 'production') {
   throw new Error('POSTGRES_URL or DATABASE_URL environment variable is required in production')
 }
