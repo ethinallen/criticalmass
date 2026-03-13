@@ -1,33 +1,34 @@
 import {
-  sqliteTable,
+  pgTable,
   text,
   integer,
+  timestamp,
   primaryKey,
   uniqueIndex,
-} from 'drizzle-orm/sqlite-core'
+} from 'drizzle-orm/pg-core'
 
 // ---------- Auth.js tables ----------
 
-export const users = sqliteTable('users', {
+export const users = pgTable('users', {
   id: text('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
   name: text('name'),
   email: text('email').unique(),
-  emailVerified: integer('emailVerified', { mode: 'timestamp' }),
+  emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
   role: text('role', { enum: ['user', 'moderator', 'admin'] })
     .notNull()
     .default('user'),
-  createdAt: integer('createdAt', { mode: 'timestamp' })
+  createdAt: timestamp('createdAt', { mode: 'date' })
     .notNull()
     .$defaultFn(() => new Date()),
-  updatedAt: integer('updatedAt', { mode: 'timestamp' })
+  updatedAt: timestamp('updatedAt', { mode: 'date' })
     .notNull()
     .$defaultFn(() => new Date()),
 })
 
-export const accounts = sqliteTable(
+export const accounts = pgTable(
   'accounts',
   {
     userId: text('userId')
@@ -47,27 +48,27 @@ export const accounts = sqliteTable(
   (table) => [primaryKey({ columns: [table.provider, table.providerAccountId] })],
 )
 
-export const sessions = sqliteTable('sessions', {
+export const sessions = pgTable('sessions', {
   sessionToken: text('sessionToken').primaryKey(),
   userId: text('userId')
     .notNull()
     .references(() => users.id, { onDelete: 'cascade' }),
-  expires: integer('expires', { mode: 'timestamp' }).notNull(),
+  expires: timestamp('expires', { mode: 'date' }).notNull(),
 })
 
-export const verificationTokens = sqliteTable(
+export const verificationTokens = pgTable(
   'verificationTokens',
   {
     identifier: text('identifier').notNull(),
     token: text('token').notNull(),
-    expires: integer('expires', { mode: 'timestamp' }).notNull(),
+    expires: timestamp('expires', { mode: 'date' }).notNull(),
   },
   (table) => [primaryKey({ columns: [table.identifier, table.token] })],
 )
 
 // ---------- Application tables ----------
 
-export const rides = sqliteTable(
+export const rides = pgTable(
   'rides',
   {
     id: text('id')
@@ -89,21 +90,21 @@ export const rides = sqliteTable(
     status: text('status', { enum: ['active', 'provisional', 'dormant'] })
       .notNull()
       .default('provisional'),
-    provisionalDeadline: integer('provisionalDeadline', { mode: 'timestamp' }),
-    lastActivityConfirmation: integer('lastActivityConfirmation', {
-      mode: 'timestamp',
+    provisionalDeadline: timestamp('provisionalDeadline', { mode: 'date' }),
+    lastActivityConfirmation: timestamp('lastActivityConfirmation', {
+      mode: 'date',
     }),
-    createdAt: integer('createdAt', { mode: 'timestamp' })
+    createdAt: timestamp('createdAt', { mode: 'date' })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer('updatedAt', { mode: 'timestamp' })
+    updatedAt: timestamp('updatedAt', { mode: 'date' })
       .notNull()
       .$defaultFn(() => new Date()),
   },
   (table) => [uniqueIndex('rides_slug_idx').on(table.slug)],
 )
 
-export const claims = sqliteTable('claims', {
+export const claims = pgTable('claims', {
   id: text('id')
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
@@ -125,17 +126,17 @@ export const claims = sqliteTable('claims', {
     .notNull()
     .default('pending'),
   reviewedBy: text('reviewedBy').references(() => users.id),
-  reviewedAt: integer('reviewedAt', { mode: 'timestamp' }),
+  reviewedAt: timestamp('reviewedAt', { mode: 'date' }),
   reviewNote: text('reviewNote'),
-  createdAt: integer('createdAt', { mode: 'timestamp' })
+  createdAt: timestamp('createdAt', { mode: 'date' })
     .notNull()
     .$defaultFn(() => new Date()),
-  updatedAt: integer('updatedAt', { mode: 'timestamp' })
+  updatedAt: timestamp('updatedAt', { mode: 'date' })
     .notNull()
     .$defaultFn(() => new Date()),
 })
 
-export const maintainers = sqliteTable(
+export const maintainers = pgTable(
   'maintainers',
   {
     id: text('id')
@@ -150,7 +151,7 @@ export const maintainers = sqliteTable(
     role: text('role', { enum: ['primary', 'secondary'] })
       .notNull()
       .default('primary'),
-    createdAt: integer('createdAt', { mode: 'timestamp' })
+    createdAt: timestamp('createdAt', { mode: 'date' })
       .notNull()
       .$defaultFn(() => new Date()),
   },
